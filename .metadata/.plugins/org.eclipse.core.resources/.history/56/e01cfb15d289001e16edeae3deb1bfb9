@@ -1,0 +1,61 @@
+package org.jsp.jdbc.properties;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Properties;
+
+public class Createusertable {
+	public static void main(String[] args) {
+		Connection con=null;
+		Statement st=null;
+		String qry="create table user (id int not null,"
+				+ "name varchar(48)not null,"
+				+ "phone big int(20)unique not null,"
+				+ "email varchar(45)unique not null,"
+				+ "password varchar(45)not null,"
+				+ "primary key(id))";
+		Properties p=new Properties();
+		FileInputStream fin=null;
+		try {
+			fin=new FileInputStream("C:\\Users\\Yogesh\\OneDrive\\Desktop\\JDBC\\jdbc.properties");
+			p.load(fin);
+			try {
+				Class.forName("com.mysql.cj.jdbc.Driver");
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			con=DriverManager.getConnection("jdbc\\:mysql://localhost:3306//jdbc_demo","root","admin");
+			st=con.createStatement();
+			st.execute(qry);
+			System.out.println("table created");
+			
+		}catch(IOException|SQLException e) {
+			e.printStackTrace();
+			System.out.println("Not created");
+		}finally {
+			if (con != null) {
+
+				try {
+					con.close();
+					System.out.println("connected closed");
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+			}
+			if (st != null) {
+				try {
+					st.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}}
+
+
